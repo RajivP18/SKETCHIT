@@ -1,4 +1,4 @@
-# ✏️ SketchAI — Image to Sketch Converter
+# ✏️ SketchIT — Image to Sketch Converter
 
 Transform any photo into stunning hand-drawn artwork using OpenCV and Streamlit.
 
