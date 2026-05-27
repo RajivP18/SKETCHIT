@@ -1,0 +1,67 @@
+<style>
+/* Canvas sketch animation overlay */
+#sketch-canvas-bg {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.04;
+}
+</style>
+
+<canvas id="sketch-canvas-bg"></canvas>
+
+<script>
+(function() {
+  const canvas = document.getElementById('sketch-canvas-bg');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Pencil strokes floating in background
+  const strokes = Array.from({ length: 22 }, () => ({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    len: 30 + Math.random() * 80,
+    angle: (Math.random() - 0.5) * Math.PI * 0.5,
+    speed: 0.15 + Math.random() * 0.3,
+    opacity: 0.3 + Math.random() * 0.7,
+    width: 0.4 + Math.random() * 1.2,
+  }));
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = '#d4b478';
+    strokes.forEach(s => {
+      ctx.save();
+      ctx.globalAlpha = s.opacity * 0.6;
+      ctx.lineWidth = s.width;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(s.x, s.y);
+      ctx.lineTo(
+        s.x + Math.cos(s.angle) * s.len,
+        s.y + Math.sin(s.angle) * s.len
+      );
+      ctx.stroke();
+      ctx.restore();
+
+      s.y -= s.speed;
+      s.x += Math.sin(s.angle) * 0.2;
+      if (s.y + s.len < 0) {
+        s.y = canvas.height + 20;
+        s.x = Math.random() * canvas.width;
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
